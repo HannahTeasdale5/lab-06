@@ -14,12 +14,13 @@ library(ggplot2)
 ```
 
 ```{r diamon_rename}
-diamonds <- diamonds %>% rename(
-    depth_pct = depth,
-    length_mm = x,
-    width_mm = y,
-    depth_mm = z,
-    table_pct = table
+
+diamonds2 <- diamonds %>% rename(
+    depth = depth_pct,
+    x = length_mm,
+    y = width_mm,
+    z = depth_mm,
+    table = table_pct
   )
 ```
 
@@ -29,6 +30,16 @@ diamonds <- diamonds %>% rename(
 ```{r}
 # Do some preliminary investigations & cleaning
 
+diamonds2 <- diamonds %>%
+mutate(clarity_number = case_when(
+    clarity == "I1" ~ 1,
+    clarity == "SI2" ~ 2,
+    clarity == "SI1" ~ 3,
+    clarity == "VS2" ~ 4,
+    clarity == "VS1" ~ 5,
+    clarity == "VVS2" ~ 6,
+    clarity == "VVS1" ~ 7,
+    clarity == "IF" ~ 8))
 
 
 
@@ -44,21 +55,25 @@ diamonds <- diamonds %>%
 
 # Overall table_mm arithmetic mean?
 
+diamonds %>%
+summarise(mean(table_mm)) #mean_with_na 
 
-
+diamonds %>%
+summarise(mean(table_mm, rm.na = TRUE)) #mean_without_na
 
 
 
 # table_mm arithmetic mean within each clarity category
 
-
-
+diamonds2 %>%
+group_by(clarity_number, clarity) %>%
+summarise(mean(table_mm))
 
 
 
 ```
 
-_Add your comment here_
+As clarity increases, the mean of the table decreases.
 
 ## Exercise 3
 
@@ -70,8 +85,21 @@ _Do derivation on paper, unless you know how to write LaTeX code_
 ```{r}
 # Write gmean() command
 
+gmean <- function(x){
+  exp(
+    (1/(seq_len(x)))*
+  for(i in seq_len(x)){
+    log(x) 
+  })}
 
+gmean <- function(x){
+ (seq_len(x))
+  }
 
+y<-c(1,1,1)
+(seq_len(y))
+
+gmean(y)
 ```
 
 ## Exercise 5
@@ -90,6 +118,18 @@ test_data <- list(
 
 # Create for loop to test gmean() on the above examples
 
+for(row in test_data){
+  mean <- gmean(row)
+  print(mean)
+}
+
+for(row in test_data){
+  mean <- gmean(row)
+  print(mean)
+}
+
+test_data%>%
+gmean(test_data)
 
 ```
 
